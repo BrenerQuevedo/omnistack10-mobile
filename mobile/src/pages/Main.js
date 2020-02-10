@@ -1,10 +1,12 @@
-import React , {useEffect} from 'react';
+import React , {useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import MapView from 'react-native-maps';
 import {requestPermissionsAsync, getCurrentPositionAsync} from 'expo-location';
 
 
 function Main(){
+    const [currentRegion, setCurrentRegion] = useState(null);
+
     useEffect(()=> {
         async function loadInitialPosition() {
             //faz uma requisição de permissão ao usuário
@@ -12,18 +14,25 @@ function Main(){
         
             if(granted) {
                 //obtém a localização caso o usuário permita (granted), para maior precisão o GPS deve estar ligado
-                const location = await getCurrentPositionAsync({
+                const {coords} = await getCurrentPositionAsync({
                     enableHighAccuracy: true,
                 });
 
-                location.
+                const {latitude, longitude} = coords;
+            
+                setCurrentRegion({
+                    latitude,
+                    longitude,
+                    latitudeDelta:0.04,
+                    longitudeDelta:0.04,
+                });
             }
         }
 
         loadInitialPosition()
     }, [])
 
-    return <MapView style = {styles.map}/>
+    return <MapView style = {styles.map} initialRegion={currentRegion}/>
 }
 
 const styles = StyleSheet.create({
