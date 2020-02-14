@@ -32,6 +32,10 @@ function Main(){
         loadInitialPosition()
     }, [])
 
+    if(!currentRegion) {
+        return null;
+    }
+
     return <MapView style = {styles.map} initialRegion={currentRegion}/>
 }
 
