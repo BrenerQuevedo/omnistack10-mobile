@@ -1,5 +1,5 @@
 import React , {useEffect, useState} from 'react';
-import {StyleSheet, Image, View, Text} from 'react-native';
+import {StyleSheet, Image, View, Text, TextInput, TouchableOpacity} from 'react-native';
 import MapView, {Marker, Callout} from 'react-native-maps';
 import {requestPermissionsAsync, getCurrentPositionAsync} from 'expo-location';
 
@@ -36,7 +36,9 @@ function Main({navigation}){
         return null;
     }
 
-    return <MapView  style = {styles.map} initialRegion={currentRegion}>
+    return (
+        <>
+     <MapView  style = {styles.map} initialRegion={currentRegion}>
             <Marker coordinate={{latitude:-7.2399455,longitude: -35.9043105}}>
             <Image style={styles.avatar} source={{uri: "https://avatars1.githubusercontent.com/u/39017457?s=460&v=4"}}/>
 
@@ -50,6 +52,23 @@ function Main({navigation}){
 
             </Marker>
         </MapView>
+        
+        <View styles={styles.searchForm}>
+            <TextInput
+                style={styles.searchInput}
+                placeholder="Buscar devs por tecnologias"
+                placeholderTextColor= "#999"
+                autoCapitalize="words"
+                autoCorrect={false}
+            />
+
+            <TouchableOpacity style={styles.loadButton}> 
+                Salvar
+            </TouchableOpacity>
+        </View>
+    </>
+        
+        )
 }
 
 const styles = StyleSheet.create({
