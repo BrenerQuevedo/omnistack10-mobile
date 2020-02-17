@@ -4,6 +4,9 @@ import MapView, {Marker, Callout} from 'react-native-maps';
 import {requestPermissionsAsync, getCurrentPositionAsync} from 'expo-location';
 import {MaterialIcons} from "@expo/vector-icons";
 
+import api from "../services/api";
+
+
 function Main({navigation}){
     const [currentRegion, setCurrentRegion] = useState(null);
 
