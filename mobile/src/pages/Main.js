@@ -8,7 +8,9 @@ import api from "../services/api";
 
 
 function Main({navigation}){
+    const [devs, setDevs] = useState([]);
     const [currentRegion, setCurrentRegion] = useState(null);
+    const [techs, setTechs] = useState("");
 
     useEffect(()=> {
         async function loadInitialPosition() {
@@ -32,8 +34,27 @@ function Main({navigation}){
             }
         }
 
-        loadInitialPosition()
+        loadInitialPosition();
     }, [])
+
+
+    async function loadDevs() {
+        const {latitude, longitude} = currentRegion;
+        
+        const response = await api.get("/search", {
+            params: {
+                latitude,
+                longitude,
+                techs: "ReactJS"
+            }
+        });
+        setDevs(response.data.devs); 
+
+    }
+
+    function handleRegionChange(region){
+        setCurrentRegion(region);
+    }
 
     if(!currentRegion) {
         return null;
@@ -41,19 +62,30 @@ function Main({navigation}){
 
     return (
         <>
-     <MapView  style = {styles.map} initialRegion={currentRegion}>
-            <Marker coordinate={{latitude:-7.2399455,longitude: -35.9043105}}>
-            <Image style={styles.avatar} source={{uri: "https://avatars1.githubusercontent.com/u/39017457?s=460&v=4"}}/>
+     <MapView onRegionChangeComplete={handleRegionChange}
+             style = {styles.map} 
+             initialRegion={currentRegion}>
+            
+            {devs.map(dev => ( 
+            <Marker
+            key={dev._id} 
+            coordinate={{
+                latitude:dev.location.coordinates[1],
+                longitude: dev.location.coordinates[0]
+                }}
+            >
+            <Image style={styles.avatar} source={{uri: dev.avatar_url}}/>
 
-            <Callout onPress={()=> navigation.navigate("Profile", {github_username: "BrenerQuevedo"})}>
+            <Callout onPress={()=> navigation.navigate("Profile", {github_username: dev.github_username})}>
                 <View style={styles.callout}>
-                    <Text style={styles.devName}>Brener Quevedo</Text>
-                    <Text style={styles.devBio}>bio de teste</Text>
-                    <Text style={styles.devTechs}>ReactJS, NODE, react native</Text>
+                    <Text style={styles.devName}>{dev.name}</Text>
+                    <Text style={styles.devBio}>{dev.bio}</Text>
+                    <Text style={styles.devTechs}>{dev.techs.join(", ")}</Text>
                 </View>
             </Callout>
 
-            </Marker>
+            </Marker>))}
+
         </MapView>
         
         <View style={styles.searchForm}>
@@ -65,7 +97,7 @@ function Main({navigation}){
                 autoCorrect={false}
             />
 
-            <TouchableOpacity onPress={()=>{}} style={styles.loadButton}> 
+            <TouchableOpacity onPress={loadDevs} style={styles.loadButton}> 
                 
                 <MaterialIcons name="my-location" size={20} color="#FFF"/>
             </TouchableOpacity>
