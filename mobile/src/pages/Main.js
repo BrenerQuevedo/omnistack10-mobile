@@ -43,8 +43,8 @@ function Main({navigation}){
         
         const response = await api.get("/search", {
             params: {
-                latitude: -7.2399455,
-                longitude: -35.9043105 ,
+                latitude,
+                longitude,
                 techs
             }
         });
