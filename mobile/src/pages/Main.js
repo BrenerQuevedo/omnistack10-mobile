@@ -43,11 +43,12 @@ function Main({navigation}){
         
         const response = await api.get("/search", {
             params: {
-                latitude,
                 longitude,
-                techs: "ReactJS"
+                latitude,
+                techs
             }
         });
+        console.log(response.data.devs)
         setDevs(response.data.devs); 
 
     }
@@ -95,6 +96,8 @@ function Main({navigation}){
                 placeholderTextColor= "#999"
                 autoCapitalize="words"
                 autoCorrect={false}
+                value={techs}
+                onChangeText={setTechs}
             />
 
             <TouchableOpacity onPress={loadDevs} style={styles.loadButton}> 
