@@ -48,7 +48,6 @@ function Main({navigation}){
                 techs
             }
         });
-        console.log(response.data.devs)
         setDevs(response.data.devs); 
 
     }
